@@ -13,7 +13,7 @@ const Navbar = () => {
     }, [register]);
 
     return (
-        <div className='flex items-center justify-between mx-20'>
+        <div className='flex items-center justify-between pt-1'>
             <Logo/>
             <div>
                 <Button variant="secondary">Register</Button>

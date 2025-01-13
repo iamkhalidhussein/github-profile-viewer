@@ -1,9 +1,11 @@
 import Navbar from '../components/Navbar';
+import SearchNBanner from '../components/SearchNBanner';
 
 const Main = () => {
     return (
-        <div>
+        <div className='h-screen relative mx-20'>
             <Navbar/>
+            <SearchNBanner/>
         </div>
     );
 };
