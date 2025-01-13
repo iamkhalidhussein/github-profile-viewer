@@ -5,12 +5,14 @@ import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
 const useFetchGithubUser = (username) => {
     const { user } = useKindeAuth();
     const [loading, setLoading] = useState(false);
+    const inputUsername = username.replace(/\s+/g, '').toLowerCase();
+    console.log(inputUsername)
 
     const fetchGithubProfile = async () => {
         const authorizedUser = await user;
         setLoading(true);
         try {
-            const response = await fetch(`https://api.github.com/users/${username}`, {
+            const response = await fetch(`https://api.github.com/users/${inputUsername}`, {
                 headers: {
                     ...(authorizedUser && {
                         Authorization: `Bearer ${import.meta.env.VITE_OAuthAccessToken}`
@@ -18,6 +20,7 @@ const useFetchGithubUser = (username) => {
                 }
             })
             const data = await response.json();
+            console.log(data)
             if(data.status === '401') {
                 toast.error('unauthorized access', {
                     position: 'bottom-right',
