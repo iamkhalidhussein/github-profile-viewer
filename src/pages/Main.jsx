@@ -3,7 +3,7 @@ import SearchNBanner from '../components/SearchNBanner';
 
 const Main = () => {
     return (
-        <div className='h-screen relative mx-20'>
+        <div className='h-screen relative md:mx-20 mx-2'>
             <Navbar/>
             <SearchNBanner/>
         </div>

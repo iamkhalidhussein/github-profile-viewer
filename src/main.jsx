@@ -1,8 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.jsx'
 import { KindeProvider } from '@kinde-oss/kinde-auth-react';
+import { RouterProvider } from 'react-router-dom';
+import router from './routes/router';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -12,7 +13,7 @@ createRoot(document.getElementById('root')).render(
       logoutUri={window.location.origin}
       redirectUri={window.location.origin}
     >
-      <App />
+      <RouterProvider router={router}/>
     </KindeProvider>
   </StrictMode>,
 )

@@ -20,13 +20,18 @@ const useFetchGithubUser = (username) => {
                 }
             })
             const data = await response.json();
-            console.log(data)
+            console.log(data);
             if(data.status === '401') {
                 toast.error('unauthorized access', {
                     position: 'bottom-right',
                     autoClose: '2000'
                 });
-            };
+            } else if(data.status === '404') {
+                toast.error('user could not found', {
+                    position: 'bottom-right',
+                    autoClose: '2000'
+                });
+            }
             setLoading(false);
         } catch (error) {
             setLoading(false);
