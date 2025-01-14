@@ -23,7 +23,7 @@ export function GitHubRepoSection({
   lastUpdated
 }) {
   return (
-    <Card className="w-full max-w-3xl">
+    <Card className="w-full mx-auto mb-3 max-w-3xl">
       <CardHeader className="grid grid-cols-[1fr_110px] items-start gap-4 space-y-0">
         <div className="space-y-1">
           <CardTitle className="text-2xl">{name}</CardTitle>

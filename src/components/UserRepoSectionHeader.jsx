@@ -19,7 +19,7 @@ export function RepositorySectionHeader({ onSearch, onSort, totalCount }) {
     onSearch(searchQuery)
   }
 
-  const handleSort = () => {
+  const handleSort = (option) => {
     setSortOption(option)
     onSort(option, sortDirection)
   }
@@ -31,7 +31,7 @@ export function RepositorySectionHeader({ onSearch, onSort, totalCount }) {
   }
 
   return (
-    <div className="w-full max-w-3xl space-y-4">
+    <div className="w-full mx-auto max-w-3xl mb-4 space-y-4">
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1 flex gap-2">
           <Input

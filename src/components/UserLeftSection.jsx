@@ -2,7 +2,7 @@ import React from 'react';
 
 const UserLeftSection = () => {
     return (
-        <div className='bg-white w-3/12 rounded-md mt-10 px-5 pt-4'>
+        <div className='bg-white w-2/5 rounded-md mt-10 px-5 pt-4'>
         <div className='flex gap-4'>
             <img src="https://avatars.githubusercontent.com/u/629429?v=4" alt="hakim" className='w-14 rounded-full'/>
             <div>
