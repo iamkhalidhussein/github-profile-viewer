@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import UserLeftSection from '../components/UserLeftSection';
 import { RepositorySectionHeader } from '../components/UserRepoSectionHeader';
 import { GitHubRepoSection } from '../components/UserRepoSection';
-import { GitHubContributions } from '../components/UserContribution';
 import Navbar from '../components/Navbar';
 import { useLocation } from 'react-router-dom';
+
 import {
     Pagination,
     PaginationContent,
@@ -15,7 +15,7 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
-
+import { ToastContainer, toast } from 'react-toastify';
 
 const GithubProfile = () => {
     const [repos, setRepos] = useState([]);
@@ -66,14 +66,26 @@ const GithubProfile = () => {
     }, [location.state?.user, page]);
 
     const handleRepoSearch = (query) => {
-        const filteredRepos = fakeRepos.map((repo) => (
-            repo.name.toLocaleLowerCase().includes(query.toLocaleLowerCase()) ||
-            repo.description.toLocaleLowerCase().includes(query.toLocaleLowerCase())
-        ));
+        console.log(repos);
+        console.log(query);
+    
+        const filteredRepos = repos.filter((repo) => {
+            const nameMatch = repo?.name?.toLocaleLowerCase().includes(query.toLocaleLowerCase());
+            const descriptionMatch = repo?.description?.toLocaleLowerCase().includes(query.toLocaleLowerCase()) || false;
+            return nameMatch || descriptionMatch;
+        });
+        if(filteredRepos.length === 0) {
+            toast.error('No Ripository matched in this page', {
+                position: 'bottom-right'
+            })
+            console.log('no ripo found')
+        }
         setRepos(filteredRepos);
     };
+    
 
     const handleSorting = (option, direction) => {
+        console.log(option)
         const sortedRepos = [...repos].sort((a, b) => {
             if(option === 'name') {
                 return direction === 'asc' ?
@@ -81,8 +93,17 @@ const GithubProfile = () => {
                 b.name.localeCompare(a.name)
             }
             else if(option === 'updated') {
+                console.log(a)
                 return direction === 'asc' ?
-                new Date(a.lastUpdated).getTime() - new Date(b.lastUpdated).getTime(): new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime()
+                new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime(): new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+            } else if(option === 'forks') {
+                return direction === 'asc' ?
+                a.forks_count - b.forks_count :
+                b.forks_count - a.forks_count
+            } else if(option === 'stars') {
+                return direction === 'asc' ?
+                a.stargazers_count - b.stargazers_count : 
+                b.stargazers_count - a.stargazers_count
             }
             return direction === 'asc' ?
             a[option] - b[option] :
@@ -95,14 +116,15 @@ const GithubProfile = () => {
 
     return (
         <div className='bg-gray-200 dark:bg-slate-900 pb-3'>
+            <ToastContainer/>
             <div className='mx-10'><Navbar/></div>
             <div className='flex mx-10 gap-10 '>
             <UserLeftSection {...data}/>
-            <div className='bg-white mt-10 pt-4 rounded-md w-full max-h-screen overflow-y-auto'>
+            <div className='bg-white dark:bg-black mt-10 pt-4 rounded-md w-full max-h-screen overflow-y-auto'>
                     <RepositorySectionHeader onSearch={handleRepoSearch} onSort={handleSorting} totalCount={totalRepos}/>
                     {
                         repos.map((repo) => (
-                            <GitHubRepoSection key={repo.name} {...repo}/>
+                            <GitHubRepoSection key={repo?.id} {...repo}/>
                         ))
                     }
                     <Pagination>
@@ -123,7 +145,6 @@ const GithubProfile = () => {
                     </Pagination>
             </div>
         </div>
-        <GitHubContributions/>
     </div>
     );
 };

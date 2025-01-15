@@ -15,7 +15,7 @@ import { Separator } from "@/components/ui/separator"
 export function GitHubRepoSection({
   name,
   description,
-  stars,
+  stargazers_count,
   forks,
   watchers,
   open_issues,
@@ -65,7 +65,7 @@ export function GitHubRepoSection({
           </div>
           <div className="flex items-center">
             <Star className="mr-1 h-4 w-4" />
-            {stars?.toLocaleString()}
+            {stargazers_count?.toLocaleString()}
           </div>
           <div className="flex items-center">
             <GitFork className="mr-1 h-4 w-4" />
