@@ -8,9 +8,9 @@ const router = createBrowserRouter([
         element: <App/>,
     },
     {
-        path: '/user',
-        element: <GithubProfile/>
-    }
+        path: '/:username',
+        element: <GithubProfile/>,
+    },
 ]);
 
 export default router;

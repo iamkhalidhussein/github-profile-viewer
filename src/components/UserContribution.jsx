@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { generateMockContributionData, getYearTotalContributions } from '@/utils/mockContributionData'
+import { generateFakeContributionData, getYearTotalContributions } from '@/utils/fakeContributionData'
 
 const colorLevels = ['#ebedf0', '#9be9a8', '#40c463', '#30a14e', '#216e39']
 const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -16,7 +16,7 @@ function getColorLevel(count) {
 }
 
 export function GitHubContributions() {
-  const [contributionData] = useState(() => generateMockContributionData(3))
+  const [contributionData] = useState(() => generateFakeContributionData(3))
   const [hoveredDay, setHoveredDay] = useState(null)
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
 
@@ -53,7 +53,7 @@ export function GitHubContributions() {
   }, [contributionData, selectedYear])
 
   return (
-    <Card className="w-full max-w-4xl">
+    <Card className="w-full mt-10 mx-auto max-w-4xl">
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>Contributions</CardTitle>
         <Select value={selectedYear.toString()} onValueChange={(value) => setSelectedYear(Number(value))}>

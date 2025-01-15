@@ -14,7 +14,7 @@ const Profile = () => {
     return (
         <div>
             <DropdownMenu>
-            <DropdownMenuTrigger><img src={user?.picture || 'https://cdn-icons-png.flaticon.com/512/64/64572.png'} alt={user.given_name} /></DropdownMenuTrigger>
+            <DropdownMenuTrigger><img src={user?.picture || 'https://cdn-icons-png.flaticon.com/512/64/64572.png'} alt={user.given_name} className="w-10 rounded-full"/></DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuLabel>My Profile</DropdownMenuLabel>
                 <DropdownMenuSeparator />

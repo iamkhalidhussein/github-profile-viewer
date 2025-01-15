@@ -18,10 +18,16 @@ export function GitHubRepoSection({
   stars,
   forks,
   watchers,
-  issues,
+  open_issues,
   language,
-  lastUpdated
+  updated_at
 }) {
+
+    const extractDate = updated_at?.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    const [_, year, month, day] = extractDate;
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const new_updated_at = `${parseInt(day)} ${months[parseInt(month) - 1]}, ${year}`;
+
   return (
     <Card className="w-full mx-auto mb-3 max-w-3xl">
       <CardHeader className="grid grid-cols-[1fr_110px] items-start gap-4 space-y-0">
@@ -59,23 +65,23 @@ export function GitHubRepoSection({
           </div>
           <div className="flex items-center">
             <Star className="mr-1 h-4 w-4" />
-            {stars.toLocaleString()}
+            {stars?.toLocaleString()}
           </div>
           <div className="flex items-center">
             <GitFork className="mr-1 h-4 w-4" />
-            {forks.toLocaleString()}
+            {forks?.toLocaleString()}
           </div>
           <div className="flex items-center">
             <Eye className="mr-1 h-4 w-4" />
-            {watchers.toLocaleString()}
+            {watchers?.toLocaleString()}
           </div>
           <div className="flex items-center">
             <AlertCircle className="mr-1 h-4 w-4" />
-            {issues.toLocaleString()}
+            {open_issues?.toLocaleString()}
           </div>
           <div className="flex items-center">
             <span className="font-medium mr-1">Updated:</span>
-            {lastUpdated}
+            {new_updated_at}
           </div>
         </div>
       </CardContent>
