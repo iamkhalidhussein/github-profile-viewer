@@ -15,7 +15,8 @@ const UserLeftSection = ({
     followers,
     public_repos,
     public_gists,
-    created_at
+    created_at,
+    total_private_repos
 }) => {
     return (
         <div className='bg-white w-2/5 h-1/2 rounded-md mt-10 pb-4 px-5 pt-4'>
@@ -60,7 +61,7 @@ const UserLeftSection = ({
         </div>
         <hr className='my-3'/>
         <div className='flex gap-10'>
-            <h4 className='text-gray-400 font-medium'>Repos</h4><span>{public_repos}</span>
+            <h4 className='text-gray-400 font-medium'>Repos</h4><span>{public_repos + (total_private_repos || 0)}</span>
         </div>
         <hr className='my-3'/>
         <div className='flex gap-10'>

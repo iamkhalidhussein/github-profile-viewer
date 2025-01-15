@@ -22,9 +22,10 @@ const GithubProfile = () => {
     const location = useLocation();
     const [data, ] = useState(JSON.parse(sessionStorage.getItem('gitsniffer-user')));
     const [page, setPage] = useState(1);
-    const [perPage] = useState(10);
+    const [totalRepos, ] = useState(data?.public_repos + (data?.total_private_repos || 0));
+    const [perPage, ] = useState(Math.ceil((totalRepos) / 100 * 20));
     const { user } = useKindeAuth();
-    const [noData, setNoData] = useState(false);
+    const [totalPage, ] = useState(Math.ceil(totalRepos / perPage));
 
     const prevPage = () => {
         if(page > 1) {
@@ -33,13 +34,18 @@ const GithubProfile = () => {
     };
     
     const nextPage = () => {
-        setPage(page + 1)
+        if(totalPage === page) {
+            return;
+        } else {
+            setPage(page + 1)
+        }
     };
 
     useEffect(() => {
             const fetchRepos = async () => {
                 const authrizedUser = await user;
                 try {
+                    console.log(perPage, 'perpage')
                     const response = await fetch(`https://api.github.com/users/${data?.login}/repos?page=${page}&per_page=${perPage}`, {
                         headers: {
                             ...(authrizedUser && {
@@ -50,9 +56,6 @@ const GithubProfile = () => {
                     const fetchedData = await response.json();
                     if(fetchedData.length > 0) {
                         setRepos(fetchedData);
-                        setNoData(false);
-                    } else {
-                        setNoData(true);
                     }
                     console.log('fetchedData', fetchedData);
                 } catch (error) {
@@ -88,6 +91,7 @@ const GithubProfile = () => {
         setRepos(sortedRepos);
     };
     console.log('repos', repos,)
+    console.log('total page & page', totalPage, page)
 
     return (
         <div className='bg-gray-200 dark:bg-slate-900 pb-3'>
@@ -95,7 +99,7 @@ const GithubProfile = () => {
             <div className='flex mx-10 gap-10 '>
             <UserLeftSection {...data}/>
             <div className='bg-white mt-10 pt-4 rounded-md w-full max-h-screen overflow-y-auto'>
-                    <RepositorySectionHeader onSearch={handleRepoSearch} onSort={handleSorting} totalCount={data?.public_repos}/>
+                    <RepositorySectionHeader onSearch={handleRepoSearch} onSort={handleSorting} totalCount={totalRepos}/>
                     {
                         repos.map((repo) => (
                             <GitHubRepoSection key={repo.name} {...repo}/>
@@ -103,8 +107,8 @@ const GithubProfile = () => {
                     }
                     <Pagination>
                     <PaginationContent>
-                        <PaginationItem>
-                        <PaginationPrevious href="#" onClick={() => prevPage()} disabled={page === 1}/>
+                        <PaginationItem disabled={page === 1}>
+                        <PaginationPrevious href="#" onClick={() => prevPage()}/>
                         </PaginationItem>
                         <PaginationItem>
                         <PaginationLink href="#">{page}</PaginationLink>
@@ -112,8 +116,8 @@ const GithubProfile = () => {
                         <PaginationItem>
                         <PaginationEllipsis />
                         </PaginationItem>
-                        <PaginationItem>
-                        <PaginationNext href="#" onClick={() => nextPage()} disabled={noData}/>
+                        <PaginationItem disabled={true}>
+                        <PaginationNext href="#" onClick={() => nextPage()}/>
                         </PaginationItem>
                     </PaginationContent>
                     </Pagination>
