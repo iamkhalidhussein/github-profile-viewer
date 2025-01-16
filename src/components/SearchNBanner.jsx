@@ -4,7 +4,7 @@ import BannerTitle from './BannerTitle';
 
 const SearchNBanner = () => {
     return (
-        <div className='absolute md:bottom-1/4 bottom-2/4 flex items-center'>
+        <div className='absolute md:bottom-1/4 bottom-1/3 flex items-center'>
             <div>
                 <BannerTitle/>
                 <Search/>

@@ -17,6 +17,7 @@ import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
 import { ToastContainer, toast } from 'react-toastify';
 import UserLeftSectionSkeleton from '../components/UserLeftSectionSkeleton';
 import UserRepoSectionSkeleton from '../components/UserRepoSectionSkeleton';
+import useHandleRepoSearch from '../hooks/useHandleRepoSearch';
 
 const GithubProfile = () => {
     const [repos, setRepos] = useState([]);
@@ -27,6 +28,7 @@ const GithubProfile = () => {
     const [perPage, ] = useState(Math.ceil((totalRepos) / 100 * 20));
     const { user } = useKindeAuth();
     const [totalPage, ] = useState(Math.ceil(totalRepos / perPage));
+    const [loadingRepo, setLoadingRepo] = useState(false);
 
     const prevPage = () => {
         if(page > 1) {
@@ -44,7 +46,9 @@ const GithubProfile = () => {
 
     useEffect(() => {
             const fetchRepos = async () => {
+                setLoadingRepo(true);
                 const authrizedUser = await user;
+                // console.log('authorized user', user);
                 try {
                     //console.log(perPage, 'perpage')
                     const response = await fetch(`https://api.github.com/users/${data?.login}/repos?page=${page}&per_page=${perPage}`, {
@@ -58,33 +62,17 @@ const GithubProfile = () => {
                     if(fetchedData.length > 0) {
                         setRepos(fetchedData);
                     }
+                    setLoadingRepo(false);
                     // console.log('fetchedData', fetchedData);
                 } catch (error) {
-                    setRepoLoading(false);
+                    setLoadingRepo(false);
                     console.error('this is the main error', error);
                 }
             }
             fetchRepos();
     }, [location.state?.user, page]);
 
-    const handleRepoSearch = (query) => {
-        console.log(repos);
-        console.log(query);
-    
-        const filteredRepos = repos.filter((repo) => {
-            const nameMatch = repo?.name?.toLocaleLowerCase().includes(query.toLocaleLowerCase());
-            const descriptionMatch = repo?.description?.toLocaleLowerCase().includes(query.toLocaleLowerCase()) || false;
-            return nameMatch || descriptionMatch;
-        });
-        if(filteredRepos.length === 0) {
-            toast.error('No Ripository matched in this page', {
-                position: 'bottom-right'
-            })
-            console.log('no ripo found')
-        }
-        setRepos(filteredRepos);
-    };
-    
+    const handleRepoSearch = useHandleRepoSearch(repos, setRepos);
 
     const handleSorting = (option, direction) => {
         console.log(option)
@@ -128,7 +116,7 @@ const GithubProfile = () => {
                     <RepositorySectionHeader onSearch={handleRepoSearch} onSort={handleSorting} totalCount={totalRepos}/>
                     <div className='overflow-y-auto max-h-screen relative'>
                         {
-                            repos.length !== 0 ? 
+                            !loadingRepo ? 
                             repos.map((repo) => (
                                 <GitHubRepoSection key={repo?.id} {...repo}/>
                             )) : Array.from({ length: 5 }).map((_, idx) => (
