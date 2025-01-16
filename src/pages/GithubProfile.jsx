@@ -19,6 +19,9 @@ import UserLeftSectionSkeleton from '../components/UserLeftSectionSkeleton';
 import UserRepoSectionSkeleton from '../components/UserRepoSectionSkeleton';
 import useHandleRepoSearch from '../hooks/useHandleRepoSearch';
 import useHandleSorting from '../hooks/useHandleSorting';
+import useFetchRepos from '../hooks/useFetchRepos';
+import useNextPage from '../hooks/useNextPage';
+import usePrevPage from '../hooks/usePrevPage';
 
 const GithubProfile = () => {
     const [repos, setRepos] = useState([]);
@@ -31,48 +34,11 @@ const GithubProfile = () => {
     const [totalPage, ] = useState(Math.ceil(totalRepos / perPage));
     const [loadingRepo, setLoadingRepo] = useState(false);
 
-    const prevPage = () => {
-        if(page > 1) {
-            setPage(page - 1)
-        }
-    };
-    
-    const nextPage = () => {
-        if(totalPage === page) {
-            return;
-        } else {
-            setPage(page + 1)
-        }
-    };
-
+    const prevPage = usePrevPage(setPage, page);
+    const nextPage = useNextPage(totalPage, page, setPage);
     useEffect(() => {
-            const fetchRepos = async () => {
-                setLoadingRepo(true);
-                const authrizedUser = await user;
-                // console.log('authorized user', user);
-                try {
-                    //console.log(perPage, 'perpage')
-                    const response = await fetch(`https://api.github.com/users/${data?.login}/repos?page=${page}&per_page=${perPage}`, {
-                        headers: {
-                            ...(authrizedUser && {
-                                Authorization: `Bearer ${import.meta.env.VITE_OAuthAccessToken}`
-                            })
-                        }
-                    });
-                    const fetchedData = await response.json();
-                    if(fetchedData.length > 0) {
-                        setRepos(fetchedData);
-                    }
-                    setLoadingRepo(false);
-                    // console.log('fetchedData', fetchedData);
-                } catch (error) {
-                    setLoadingRepo(false);
-                    console.error('this is the main error', error);
-                }
-            }
-            fetchRepos();
+        const fetchRepos = useFetchRepos(setLoadingRepo, user, data, page, perPage, setRepos);
     }, [location.state?.user, page]);
-
     const handleRepoSearch = useHandleRepoSearch(repos, setRepos);
     const handleSorting = useHandleSorting(repos, setRepos);
     
