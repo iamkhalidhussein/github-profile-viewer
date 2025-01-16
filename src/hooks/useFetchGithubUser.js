@@ -8,11 +8,11 @@ const useFetchGithubUser = (username) => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const inputUsername = username.replace(/\s+/g, '').toLowerCase();
-    console.log(inputUsername); 
+    // console.log(inputUsername); 
 
     const fetchGithubProfile = async () => {
         const authorizedUser = await user;
-        console.log('authorized user', user)
+        // console.log('authorized user', user)
         setLoading(true);
         try {
             const response = await fetch(`https://api.github.com/users/${inputUsername}`, {
@@ -24,7 +24,7 @@ const useFetchGithubUser = (username) => {
             })
             
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             if(data.id) {
                 sessionStorage.removeItem('gitsniffer-user');
                 sessionStorage.setItem('gitsniffer-user', JSON.stringify(data));

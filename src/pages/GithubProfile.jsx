@@ -4,7 +4,6 @@ import { RepositorySectionHeader } from '../components/UserRepoSectionHeader';
 import { GitHubRepoSection } from '../components/UserRepoSection';
 import Navbar from '../components/Navbar';
 import { useLocation } from 'react-router-dom';
-
 import {
     Pagination,
     PaginationContent,
@@ -16,6 +15,8 @@ import {
 } from "@/components/ui/pagination";
 import { useKindeAuth } from '@kinde-oss/kinde-auth-react';
 import { ToastContainer, toast } from 'react-toastify';
+import UserLeftSectionSkeleton from '../components/UserLeftSectionSkeleton';
+import UserRepoSectionSkeleton from '../components/UserRepoSectionSkeleton';
 
 const GithubProfile = () => {
     const [repos, setRepos] = useState([]);
@@ -45,7 +46,7 @@ const GithubProfile = () => {
             const fetchRepos = async () => {
                 const authrizedUser = await user;
                 try {
-                    console.log(perPage, 'perpage')
+                    //console.log(perPage, 'perpage')
                     const response = await fetch(`https://api.github.com/users/${data?.login}/repos?page=${page}&per_page=${perPage}`, {
                         headers: {
                             ...(authrizedUser && {
@@ -57,8 +58,9 @@ const GithubProfile = () => {
                     if(fetchedData.length > 0) {
                         setRepos(fetchedData);
                     }
-                    console.log('fetchedData', fetchedData);
+                    // console.log('fetchedData', fetchedData);
                 } catch (error) {
+                    setRepoLoading(false);
                     console.error('this is the main error', error);
                 }
             }
@@ -111,22 +113,28 @@ const GithubProfile = () => {
         });
         setRepos(sortedRepos);
     };
-    console.log('repos', repos,)
-    console.log('total page & page', totalPage, page)
+    // console.log('repos', repos,)
+    // console.log('total page & page', totalPage, page)
 
     return (
         <div className='bg-gray-200 dark:bg-slate-900 pb-3'>
             <ToastContainer/>
-            <div className='mx-10'><Navbar/></div>
-            <div className='flex mx-10 gap-10 '>
-            <UserLeftSection {...data}/>
-            <div className='bg-white dark:bg-black mt-10 pt-4 rounded-md w-full max-h-screen overflow-y-auto'>
+            <div className='md:mx-10 mx-3'><Navbar/></div>
+            <div className='md:flex md:mx-10 mx-3 gap-10 '>
+            {
+                data ? <UserLeftSection {...data}/> : <UserLeftSectionSkeleton/>
+            }
+            <div className='bg-white dark:bg-black mt-10 pt-4 rounded-md w-full   mb-14'>
                     <RepositorySectionHeader onSearch={handleRepoSearch} onSort={handleSorting} totalCount={totalRepos}/>
-                    {
-                        repos.map((repo) => (
-                            <GitHubRepoSection key={repo?.id} {...repo}/>
-                        ))
-                    }
+                    <div className='overflow-y-auto max-h-screen relative'>
+                        {
+                            repos.length !== 0 ? 
+                            repos.map((repo) => (
+                                <GitHubRepoSection key={repo?.id} {...repo}/>
+                            )) : Array.from({ length: 5 }).map((_, idx) => (
+                                <UserRepoSectionSkeleton key={idx} />
+                            ))
+                        }
                     <Pagination>
                     <PaginationContent>
                         <PaginationItem disabled={page === 1}>
@@ -143,6 +151,7 @@ const GithubProfile = () => {
                         </PaginationItem>
                     </PaginationContent>
                     </Pagination>
+                    </div>
             </div>
         </div>
     </div>

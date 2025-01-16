@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Separator } from "@/components/ui/separator"
-
+import { toast, ToastContainer } from 'react-toastify';
 
 export function GitHubRepoSection({
   name,
@@ -36,15 +36,16 @@ export function GitHubRepoSection({
           <CardDescription>{description}</CardDescription>
         </div>
         <div className="flex items-center space-x-1">
-          <Button variant="secondary" className="px-3 shadow-none">
-            <Star className="mr-1 h-4 w-4" />
+          <Button variant="secondary" className="px-3 shadow-none" disabled={true}>
+            <Star className="mr-1 h-4 w-4"/>
             Star
           </Button>
           <Separator orientation="vertical" className="h-[20px]" />
-          <DropdownMenu>
+          <DropdownMenu disabled={true} >
             <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="icon" className="px-0 shadow-none h-8 w-8">
+              <Button disabled={true} variant="secondary" size="icon" className="px-0 shadow-none h-8 w-8">
                 <ChevronDown className="h-4 w-4" />
+                
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" alignOffset={-5} className="w-[200px]">

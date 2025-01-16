@@ -19,7 +19,7 @@ const UserLeftSection = ({
     total_private_repos
 }) => {
     return (
-        <div className='bg-white w-2/5 h-1/2 dark:bg-black rounded-md mt-10 pb-4 px-5 pt-4'>
+        <div className='bg-white md:w-2/5 h-1/2 dark:bg-black rounded-md mt-10 pb-4 md:px-5 px-4 pt-4'>
         <div className='flex gap-4'>
             <img src={avatar_url} className='w-14 rounded-full'/>
             <div>
